@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>B37E43F9-7BC6-4F1C-9AAD-74F469D4C635</string>
+	<key>IDESourceControlProjectName</key>
+	<string>SMUOpenCV</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>E9F73307E050489B476DEC4821BBA4C7592A67F3</key>
+		<string>https://github.com/nsliwa/BEN-T3.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>SMUOpenCV/SMUOpenCV.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>E9F73307E050489B476DEC4821BBA4C7592A67F3</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/nsliwa/BEN-T3.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>E9F73307E050489B476DEC4821BBA4C7592A67F3</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E9F73307E050489B476DEC4821BBA4C7592A67F3</string>
+			<key>IDESourceControlWCCName</key>
+			<string>BEN-T3</string>
+		</dict>
+	</array>
+</dict>
+</plist>

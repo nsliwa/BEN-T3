@@ -18,6 +18,9 @@ using namespace cv;
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (strong, nonatomic) CvVideoCameraMod *videoCamera;
 @property (nonatomic) BOOL torchIsOn;
+@property (weak, nonatomic) IBOutlet UISwitch *cameraSwitch;
+@property (weak, nonatomic) IBOutlet UISwitch *torchSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *objectDetectedLabel;
 
 @end
 
@@ -30,21 +33,26 @@ using namespace cv;
     self.videoCamera = [[CvVideoCameraMod alloc] initWithParentView:self.imageView];
     self.videoCamera.delegate = self;
     
-    self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
+    self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront; //Back;
     self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
     self.videoCamera.defaultFPS = 30;
     self.videoCamera.grayscaleMode = NO;
     
+//    self.torchIsOn = !self.torchIsOn;
+//    [self setTorchOn:self.torchIsOn];
+    
     [self.videoCamera start];
     
-    self.torchIsOn = NO;
+//    self.torchIsOn = NO;
     
 }
 
 #ifdef __cplusplus
 -(void) processImage:(Mat &)image{
  
+    NSLog(@"procesing");
+    
     // Do some OpenCV stuff with the image
     Mat image_copy;
     Mat grayFrame, output;
@@ -108,23 +116,40 @@ using namespace cv;
 //    cvtColor(image_copy, image, CV_BGR2BGRA);
 }
 #endif
-
-- (IBAction)toggleTorch:(id)sender {
+- (IBAction)toggleTorchSwitch:(id)sender {
     // you will need to fix the problem of video stopping when the torch is applied in this method
+    
     self.torchIsOn = !self.torchIsOn;
     [self setTorchOn:self.torchIsOn];
+    
+}
+- (IBAction)toggleCameraSwitch:(id)sender {
+}
+
+- (IBAction)toggleTorch:(id)sender {
     
 }
 
 - (void)setTorchOn: (BOOL) onOff
 {
- 
-    AVCaptureDevice *device = [AVCaptureDevice
-                               defaultDeviceWithMediaType:AVMediaTypeVideo];
-    if ([device hasTorch]) {
+    AVCaptureDevice *device = nil;
+    
+    NSArray* allDevices = [AVCaptureDevice devices];
+    for (AVCaptureDevice* currentDevice in allDevices) {
+        if (currentDevice.position == AVCaptureDevicePositionBack) {
+            device = currentDevice;
+        }
+    }
+    
+    
+//    AVCaptureDevice *device = [AVCaptureDevice
+//                               defaultDeviceWithMediaType:AVMediaTypeVideo];
+    if (self.videoCamera.defaultAVCaptureDevicePosition == AVCaptureDevicePositionBack && [device hasTorch]) {
+        
         [device lockForConfiguration:nil];
         [device setTorchMode: onOff ? AVCaptureTorchModeOn : AVCaptureTorchModeOff];
         [device unlockForConfiguration];
+        
     }
     
 }
