@@ -203,7 +203,6 @@ using namespace cv;
 }
 #endif
 - (IBAction)toggleTorchSwitch:(id)sender {
-    // you will need to fix the problem of video stopping when the torch is applied in this method
     
     self.torchIsOn = !self.torchIsOn;
     [self setTorchOn:self.torchIsOn];
