@@ -22,6 +22,11 @@ using namespace cv;
 @property (weak, nonatomic) IBOutlet UISwitch *torchSwitch;
 @property (weak, nonatomic) IBOutlet UILabel *objectDetectedLabel;
 
+@property (nonatomic) int objectCount;
+@property (nonatomic) float* bufferR;
+@property (nonatomic) float* bufferG;
+@property (nonatomic) float* bufferB;
+
 @end
 
 @implementation ViewController
@@ -29,6 +34,8 @@ using namespace cv;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+    //bufferB =
     
     self.videoCamera = [[CvVideoCameraMod alloc] initWithParentView:self.imageView];
     self.videoCamera.delegate = self;
@@ -56,6 +63,31 @@ using namespace cv;
     // Do some OpenCV stuff with the image
     Mat image_copy;
     Mat grayFrame, output;
+    
+    cvtColor(image, image_copy, CV_BGRA2BGR); // get rid of alpha for processing
+    
+    Scalar avgPixelIntensity = cv::mean( image_copy );
+    char text[50];
+    sprintf(text,"Avg. B: %.1f, G: %.1f,R: %.1f", avgPixelIntensity.val[0],avgPixelIntensity.val[1],avgPixelIntensity.val[2]);
+    cv::putText(image, text, cv::Point(10, 20), FONT_HERSHEY_PLAIN, 1, Scalar::all(255), 1,2);
+    NSLog(@"Avg B: %.1f, G: %.1f, R: %.1f", avgPixelIntensity.val[0], avgPixelIntensity.val[1], avgPixelIntensity.val[2]);
+    
+    if(avgPixelIntensity.val[0] < 75.0 && avgPixelIntensity.val[1] < 75.0) {
+        NSLog(@"Object!");
+        
+    }
+    
+//    cvtColor(image_copy, image_copy, CV_BGR2HSV); // convert to hsv
+    
+//    avgPixelIntensity = cv::mean( image_copy );
+////        char text[50];
+//        sprintf(text,"Avg. H: %.1f, S: %.1f,V: %.1f", avgPixelIntensity.val[0],avgPixelIntensity.val[1],avgPixelIntensity.val[2]);
+//        cv::putText(image, text, cv::Point(10, 20), FONT_HERSHEY_PLAIN, 1, Scalar::all(255), 1,2);
+//    NSLog(@"Avg H: %.1f, S: %.1f, V: %.1f", avgPixelIntensity.val[0], avgPixelIntensity.val[1], avgPixelIntensity.val[2]);
+    
+    
+//    cvtColor(image_copy, image_copy, CV_HSV2BGR); // convert back from hsv
+    cvtColor(image_copy, image, CV_BGR2BGRA); //add back for display
     
     //============================================
     // color inverter
