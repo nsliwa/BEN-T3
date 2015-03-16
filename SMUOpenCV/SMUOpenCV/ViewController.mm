@@ -31,11 +31,41 @@ using namespace cv;
 
 @implementation ViewController
 
+-(int)objectCount {
+    if(!_objectCount) {
+        _objectCount = 0;
+    }
+    
+    return _objectCount;
+}
+
+-(float*)bufferR {
+    if(!_bufferR) {
+        _bufferR = new float[100]();
+    }
+    
+    return _bufferR;
+}
+
+-(float*)bufferG {
+    if(!_bufferG) {
+        _bufferG = new float[100]();
+    }
+    
+    return _bufferG;
+}
+
+-(float*)bufferB {
+    if(!_bufferB) {
+        _bufferB = new float[100]();
+    }
+    
+    return _bufferB;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    //bufferB =
     
     self.videoCamera = [[CvVideoCameraMod alloc] initWithParentView:self.imageView];
     self.videoCamera.delegate = self;
@@ -75,8 +105,30 @@ using namespace cv;
     NSLog(@"Avg B: %.1f, G: %.1f, R: %.1f", avgPixelIntensity.val[0], avgPixelIntensity.val[1], avgPixelIntensity.val[2]);
     
     if(avgPixelIntensity.val[0] < 75.0 && avgPixelIntensity.val[1] < 75.0) {
-        NSLog(@"Object!");
+        NSLog(@"Object! %d", self.objectCount);
         
+        if(self.objectCount < 100) {
+            self.bufferR[self.objectCount] = avgPixelIntensity.val[2];
+            self.bufferG[self.objectCount] = avgPixelIntensity.val[1];
+            self.bufferB[self.objectCount] = avgPixelIntensity.val[0];
+            
+            self.objectCount++;
+        }
+        
+    }
+    
+    else {self.objectCount = 0;}
+    
+    if(self.objectCount >= 100) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+           self.objectDetectedLabel.text = @"Object Detected";
+        });
+    }
+    
+    else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.objectDetectedLabel.text = @"";
+        });
     }
     
 //    cvtColor(image_copy, image_copy, CV_BGR2HSV); // convert to hsv
