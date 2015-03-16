@@ -99,13 +99,18 @@ using namespace cv;
     cvtColor(image, image_copy, CV_BGRA2BGR); // get rid of alpha for processing
     
     Scalar avgPixelIntensity = cv::mean( image_copy );
-    char text[50];
-    sprintf(text,"Avg. B: %.1f, G: %.1f,R: %.1f", avgPixelIntensity.val[0],avgPixelIntensity.val[1],avgPixelIntensity.val[2]);
-    cv::putText(image, text, cv::Point(10, 20), FONT_HERSHEY_PLAIN, 1, Scalar::all(255), 1,2);
-    NSLog(@"Avg B: %.1f, G: %.1f, R: %.1f", avgPixelIntensity.val[0], avgPixelIntensity.val[1], avgPixelIntensity.val[2]);
+//    char text[50];
+//    sprintf(text,"Avg. B: %.1f, G: %.1f,R: %.1f", avgPixelIntensity.val[0],avgPixelIntensity.val[1],avgPixelIntensity.val[2]);
+//    cv::putText(image, text, cv::Point(10, 20), FONT_HERSHEY_PLAIN, 1, Scalar::all(255), 1,2);
+//    NSLog(@"Avg B: %.1f, G: %.1f, R: %.1f", avgPixelIntensity.val[0], avgPixelIntensity.val[1], avgPixelIntensity.val[2]);
     
     if(avgPixelIntensity.val[0] < 75.0 && avgPixelIntensity.val[1] < 75.0) {
         NSLog(@"Object! %d", self.objectCount);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.cameraSwitch.enabled = false;
+            self.torchSwitch.enabled = false;
+        });
         
         if(self.objectCount < 100) {
             self.bufferR[self.objectCount] = avgPixelIntensity.val[2];
@@ -117,12 +122,21 @@ using namespace cv;
         
     }
     
-    else {self.objectCount = 0;}
+    else {
+        self.objectCount = 0;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.cameraSwitch.enabled = true;
+            self.torchSwitch.enabled = true;
+        });
+    }
     
     if(self.objectCount >= 100) {
         dispatch_async(dispatch_get_main_queue(), ^{
-           self.objectDetectedLabel.text = @"Object Detected";
+           self.objectDetectedLabel.text = @"Object!";
         });
+        
+        NSLog(@"Object present for longer than 100 frames!");
     }
     
     else {
