@@ -40,25 +40,27 @@ using namespace cv;
     self.videoCamera = [[CvVideoCameraMod alloc] initWithParentView:self.imageView];
     self.videoCamera.delegate = self;
     
-    self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront; //Back;
+    self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
     self.videoCamera.defaultAVCaptureSessionPreset = AVCaptureSessionPreset352x288;
     self.videoCamera.defaultAVCaptureVideoOrientation = AVCaptureVideoOrientationPortrait;
     self.videoCamera.defaultFPS = 30;
     self.videoCamera.grayscaleMode = NO;
+    
+    self.torchSwitch.enabled = false;
     
 //    self.torchIsOn = !self.torchIsOn;
 //    [self setTorchOn:self.torchIsOn];
     
     [self.videoCamera start];
     
-//    self.torchIsOn = NO;
+    self.torchIsOn = NO;
     
 }
 
 #ifdef __cplusplus
 -(void) processImage:(Mat &)image{
  
-    NSLog(@"procesing");
+    //NSLog(@"procesing");
     
     // Do some OpenCV stuff with the image
     Mat image_copy;
@@ -156,6 +158,22 @@ using namespace cv;
     
 }
 - (IBAction)toggleCameraSwitch:(id)sender {
+    
+    if(self.cameraSwitch.on) {
+        self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionFront;
+        [self.videoCamera stop];
+        [self.videoCamera start];
+        [self.torchSwitch setOn:(true)];
+        self.torchIsOn = NO;
+        self.torchSwitch.enabled = false;
+        
+    } else {
+        self.videoCamera.defaultAVCaptureDevicePosition = AVCaptureDevicePositionBack;
+        [self.videoCamera stop];
+        [self.videoCamera start];
+        self.torchSwitch.enabled = true;
+    }
+    
 }
 
 - (IBAction)toggleTorch:(id)sender {
